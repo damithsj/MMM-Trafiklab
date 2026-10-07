@@ -4,6 +4,16 @@ A [MagicMirror²](https://magicmirror.builders/) module that shows upcoming bus/
 
 Choose arrivals, departures, or both (two sections in one panel) with the `type` option. Each row shows the line (with a mode icon, colored by transport mode), the direction, the platform letter, the minutes until arrival, and — when the vehicle is off schedule — the timetable time and the delay (`+2` late, `−1` early). Canceled trips are struck through.
 
+## Screenshots
+
+Vertical layout (side columns):
+
+![Vertical layout](images/vertical.png)
+
+Horizontal layout (`top_bar` / `bottom_bar`):
+
+![Horizontal layout](images/horizontal.png)
+
 ## Install
 
 ```bash
@@ -13,9 +23,43 @@ git clone https://github.com/damithsj/MMM-Trafiklab.git
 
 No `npm install` is needed (uses Node's built-in `fetch`, Node 18+).
 
-## Configuration
+## Getting an API key
 
-Get an API key (with access to *Trafiklab Realtime APIs*) from [trafiklab.se](https://www.trafiklab.se/), and look up your stop id with Trafiklab Stop Lookup.
+1. Create a free account at the [Trafiklab developer portal](https://developer.trafiklab.se/).
+2. Create a project and add the **Trafiklab Realtime APIs** to it.
+3. Generate an API key for the project and copy it into `apiKey` in your module config.
+
+Trafiklab's Bronze level allows 25 requests per minute and 100,000 requests per 30 days. Keep that in mind when choosing `updateInterval` and `type` (see [Request volume](#request-volume)). The portal's steps may change over time; see the [Trafiklab documentation](https://www.trafiklab.se/api/our-apis/trafiklab-realtime-apis) for the current process.
+
+## Finding your stop id
+
+Use the Stop Lookup endpoint to search for a stop by name:
+
+```
+https://realtime-api.trafiklab.se/v1/stops/name/{searchValue}?key=YOUR_API_KEY
+```
+
+Example for `Bygdegatan`:
+
+```json
+{
+  "stop_groups": [
+    {
+      "id": "740056501",
+      "name": "Bygdegatan",
+      "transport_modes": ["BUS"],
+      "stops": [{ "id": "16629", "name": "Bygdegatan" }]
+    }
+  ]
+}
+```
+
+- Use the **stop group `id`** (`740056501`) as `stopId`.
+- For `destinationId`, use the short **`stops[].id`** of the destination stop instead (for example `9` for Linköping Centralstation, which belongs to group `740000009`). This is the id the arrivals and departures data reports for a route's final destination.
+
+Results are sorted by traffic, so the busiest matching stops come first. Remember to URL-encode special characters such as `ö` (`Link%C3%B6ping`).
+
+## Configuration
 
 ```js
 {
@@ -53,7 +97,7 @@ Show both arrivals and departures in a bottom bar:
 | `platforms` | `[]` | Optional. Only show entries on these scheduled platforms, as an array (`["A", "B"]`) or comma-separated string (`"A,B"`). Case-insensitive. Combines with `destinationId`. |
 | `type` | `"arrivals"` | `"arrivals"`, `"departures"` or `"both"`. With `"both"` the module shows an Arrivals and a Departures section (stacked, or side by side with `layout: "horizontal"`) and makes two API calls per update, so mind your key's quota. At mid-route stops the two lists are nearly identical; `"both"` is most useful at terminals and stops where vehicles wait. |
 | `maxEntries` | `5` | Number of rows shown, per section when `type` is `"both"`. |
-| `updateInterval` | `300000` | How often the API is called (ms, minimum 30000). Mind your key's rate/quota limits. |
+| `updateInterval` | `300000` | How often the API is called (ms, minimum 30000). See [Request volume](#request-volume). |
 | `refreshInterval` | `30000` | How often the countdown is redrawn from cached data (ms). |
 | `showHeader` | `true` | Show the stop name. |
 | `showPlatform` | `true` | Show the platform/stop position. |
@@ -66,13 +110,35 @@ Show both arrivals and departures in a bottom bar:
 | `modeIcons` | see source | Font Awesome class per transport mode. |
 | `showTimeAfterMinutes` | `60` | Show a clock time instead of a countdown beyond this many minutes. |
 | `fade` / `fadePoint` | `true` / `0.25` | Fade out the lower rows. |
-| `modeColors` | see below | Badge color per transport mode. Override only the modes you want; the rest keep their defaults. |
+| `modeColors` | see [Line colors](#line-colors) | Badge color per transport mode. Override only the modes you want; the rest keep their defaults. |
 
 The module is translated to English and Swedish following the MagicMirror `language` setting.
 
+### Request volume
+
+Each update makes one API request (two with `type: "both"`). The countdown redraws every `refreshInterval` without calling the API.
+
+| `updateInterval` | `type` single | `type: "both"` |
+|---|---|---|
+| 5 minutes (default) | ~8,600 per 30 days | ~17,300 per 30 days |
+| 1 minute | ~43,200 per 30 days | ~86,400 per 30 days |
+| 30 seconds (minimum) | ~86,400 per 30 days | ~172,800 per 30 days (over Bronze) |
+
+Restarts, reloads and extra module instances using the same key add to these numbers.
+
 ### Line colors
 
-Bus and tram defaults approximate Östgötatrafiken's red; metro (blue), commuter train (pink) and ship (teal) approximate Stockholm's SL. Override any subset:
+These are the default badge colors. You can change any of them with `modeColors`, and any mode you leave out keeps its default.
+
+| Mode | Default | Color |
+|---|---|---|
+| `BUS` | `#e10e1c` | ![#e10e1c](https://placehold.co/16x16/e10e1c/e10e1c.png) |
+| `TRAM` | `#b90000` | ![#b90000](https://placehold.co/16x16/b90000/b90000.png) |
+| `METRO` | `#0a78c8` | ![#0a78c8](https://placehold.co/16x16/0a78c8/0a78c8.png) |
+| `TRAIN` | `#ec6fa6` | ![#ec6fa6](https://placehold.co/16x16/ec6fa6/ec6fa6.png) |
+| `SHIP` | `#00a3a1` | ![#00a3a1](https://placehold.co/16x16/00a3a1/00a3a1.png) |
+| `TAXI` | `#d4a017` | ![#d4a017](https://placehold.co/16x16/d4a017/d4a017.png) |
+| `UNKNOWN` | `#808080` | ![#808080](https://placehold.co/16x16/808080/808080.png) |
 
 ```js
 modeColors: {
