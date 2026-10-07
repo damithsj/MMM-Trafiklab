@@ -6,6 +6,7 @@ Module.register("MMM-Trafiklab", {
     stopId: "", // required, Trafiklab stop id (e.g. "740056501")
     destinationId: "", // optional, only show arrivals whose final destination has this stop id
     platforms: [], // optional, only show these scheduled platforms, e.g. ["A", "B"] or "A,B"
+    type: "arrivals", // "arrivals", "departures" or "both"
     layout: "vertical", // "vertical" for side columns, "horizontal" for top_bar / bottom_bar
     maxEntries: 5,
     updateInterval: 5 * 60 * 1000, // how often to call the API (ms)
@@ -52,7 +53,7 @@ Module.register("MMM-Trafiklab", {
   },
 
   start() {
-    this.arrivals = null;
+    this.sections = null;
     this.stopName = null;
     this.alerts = [];
     this.error = null;
@@ -73,7 +74,8 @@ Module.register("MMM-Trafiklab", {
       apiKey: this.config.apiKey,
       stopId: this.config.stopId,
       destinationId: this.config.destinationId,
-      platforms: this.config.platforms
+      platforms: this.config.platforms,
+      type: this.config.type
     });
   },
 
@@ -81,7 +83,7 @@ Module.register("MMM-Trafiklab", {
     if (!payload || payload.identifier !== this.identifier) return;
 
     if (notification === "TRAFIKLAB_DATA") {
-      this.arrivals = payload.arrivals;
+      this.sections = payload.sections;
       this.stopName = payload.stopName;
       this.alerts = payload.alerts;
       this.error = null;
@@ -97,6 +99,11 @@ Module.register("MMM-Trafiklab", {
     return moment(value, "YYYY-MM-DDTHH:mm:ss");
   },
 
+  types() {
+    if (this.config.type === "both") return ["arrivals", "departures"];
+    return [this.config.type === "departures" ? "departures" : "arrivals"];
+  },
+
   getDom() {
     const wrapper = document.createElement("div");
     wrapper.className = `trafiklab trafiklab-${this.config.layout === "horizontal" ? "horizontal" : "vertical"}`;
@@ -108,7 +115,7 @@ Module.register("MMM-Trafiklab", {
       wrapper.appendChild(header);
     }
 
-    if (!this.arrivals) {
+    if (!this.sections) {
       const msg = document.createElement("div");
       msg.className = "trafiklab-msg dimmed";
       msg.textContent = this.error ? `${this.error}` : this.translate("LOADING");
@@ -117,33 +124,11 @@ Module.register("MMM-Trafiklab", {
     }
 
     const now = moment();
-    const upcoming = this.arrivals
-      .map((a) => ({ ...a, time: this.parseTime(a.realtime || a.scheduled) }))
-      .filter((a) => a.time.isValid() && a.time.diff(now, "seconds") > -30)
-      .sort((a, b) => a.time.valueOf() - b.time.valueOf())
-      .slice(0, this.config.maxEntries);
-
-    if (upcoming.length === 0) {
-      const msg = document.createElement("div");
-      msg.className = "trafiklab-msg dimmed";
-      msg.textContent = this.translate("NO_ARRIVALS");
-      wrapper.appendChild(msg);
-    }
-
-    const list = document.createElement("div");
-    list.className = "trafiklab-list";
-    upcoming.forEach((arrival, index) => {
-      const row = this.buildRow(arrival, now);
-      if (this.config.fade && upcoming.length > 1) {
-        const start = upcoming.length * this.config.fadePoint;
-        const steps = upcoming.length - start;
-        if (index >= start) {
-          row.style.opacity = 1 - (1 / steps) * (index - start + 1) * 0.8;
-        }
-      }
-      list.appendChild(row);
-    });
-    wrapper.appendChild(list);
+    const types = this.types();
+    const container = document.createElement("div");
+    container.className = "trafiklab-sections";
+    types.forEach((type) => container.appendChild(this.buildSection(type, now, types.length > 1)));
+    wrapper.appendChild(container);
 
     if (this.config.showAlerts && this.alerts.length) {
       const alert = document.createElement("div");
@@ -160,6 +145,50 @@ Module.register("MMM-Trafiklab", {
     }
 
     return wrapper;
+  },
+
+  buildSection(type, now, showTitle) {
+    const section = document.createElement("div");
+    section.className = "trafiklab-section";
+
+    if (showTitle) {
+      const title = document.createElement("div");
+      title.className = "trafiklab-section-title dimmed";
+      const icon = document.createElement("i");
+      icon.className = `fas ${type === "arrivals" ? "fa-sign-in-alt" : "fa-sign-out-alt"}`;
+      title.appendChild(icon);
+      title.appendChild(document.createTextNode(this.translate(type === "arrivals" ? "ARRIVALS" : "DEPARTURES")));
+      section.appendChild(title);
+    }
+
+    const upcoming = (this.sections[type] || [])
+      .map((a) => ({ ...a, time: this.parseTime(a.realtime || a.scheduled) }))
+      .filter((a) => a.time.isValid() && a.time.diff(now, "seconds") > -30)
+      .sort((a, b) => a.time.valueOf() - b.time.valueOf())
+      .slice(0, this.config.maxEntries);
+
+    if (upcoming.length === 0) {
+      const msg = document.createElement("div");
+      msg.className = "trafiklab-msg dimmed";
+      msg.textContent = this.translate(type === "arrivals" ? "NO_ARRIVALS" : "NO_DEPARTURES");
+      section.appendChild(msg);
+    }
+
+    const list = document.createElement("div");
+    list.className = "trafiklab-list";
+    upcoming.forEach((item, index) => {
+      const row = this.buildRow(item, now);
+      if (this.config.fade && upcoming.length > 1) {
+        const start = upcoming.length * this.config.fadePoint;
+        const steps = upcoming.length - start;
+        if (index >= start) {
+          row.style.opacity = 1 - (1 / steps) * (index - start + 1) * 0.8;
+        }
+      }
+      list.appendChild(row);
+    });
+    section.appendChild(list);
+    return section;
   },
 
   buildRow(arrival, now) {

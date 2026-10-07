@@ -125,6 +125,32 @@
   text-align: center;
 }
 
+.trafiklab-section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 10px 0 2px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.trafiklab-section-title i {
+  font-size: 11px;
+}
+
+.trafiklab-horizontal .trafiklab-sections {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  text-align: left;
+}
+
+.trafiklab-horizontal .trafiklab-section {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
 .trafiklab-horizontal .trafiklab-list {
   display: flex;
   flex-wrap: wrap;

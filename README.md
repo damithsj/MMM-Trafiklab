@@ -1,8 +1,8 @@
 # MMM-Trafiklab
 
-A [MagicMirror²](https://magicmirror.builders/) module that shows upcoming bus/tram/train arrivals for a stop, using the [Trafiklab Realtime API](https://www.trafiklab.se/api/our-apis/trafiklab-realtime-apis). Layout inspired by [MMM-Futar](https://github.com/balassy/MMM-Futar).
+A [MagicMirror²](https://magicmirror.builders/) module that shows upcoming bus/tram/train arrivals and/or departures for a stop, using the [Trafiklab Realtime API](https://www.trafiklab.se/api/our-apis/trafiklab-realtime-apis). Layout inspired by [MMM-Futar](https://github.com/balassy/MMM-Futar).
 
-Each row shows the line (with a mode icon, colored by transport mode), the direction, the platform letter, the minutes until arrival, and — when the vehicle is off schedule — the timetable time and the delay (`+2` late, `−1` early). Canceled trips are struck through.
+Choose arrivals, departures, or both (two sections in one panel) with the `type` option. Each row shows the line (with a mode icon, colored by transport mode), the direction, the platform letter, the minutes until arrival, and — when the vehicle is off schedule — the timetable time and the delay (`+2` late, `−1` early). Canceled trips are struck through.
 
 ## Install
 
@@ -29,14 +29,30 @@ Get an API key (with access to *Trafiklab Realtime APIs*) from [trafiklab.se](ht
 }
 ```
 
+Show both arrivals and departures in a bottom bar:
+
+```js
+{
+  module: "MMM-Trafiklab",
+  position: "bottom_bar",
+  config: {
+    apiKey: "YOUR_API_KEY",
+    stopId: "740056501",
+    type: "both",
+    layout: "horizontal"
+  }
+}
+```
+
 | Option | Default | Description |
 |---|---|---|
 | `apiKey` | – | **Required.** Trafiklab API key. |
-| `stopId` | – | **Required.** Stop id to show arrivals for. |
-| `destinationId` | `""` | Optional. If set, only arrivals whose final destination stop id matches are shown (i.e. one direction of travel). |
-| `layout` | `"vertical"` | `"vertical"` for side columns; `"horizontal"` lays the arrivals out in a wrapping row, for `top_bar` / `bottom_bar`. |
-| `platforms` | `[]` | Optional. Only show arrivals on these scheduled platforms, as an array (`["A", "B"]`) or comma-separated string (`"A,B"`). Case-insensitive. Combines with `destinationId`. |
-| `maxEntries` | `5` | Number of arrivals shown. |
+| `stopId` | – | **Required.** Stop id to show arrivals/departures for. |
+| `destinationId` | `""` | Optional. If set, only entries whose final destination stop id matches are shown (i.e. one direction of travel). |
+| `layout` | `"vertical"` | `"vertical"` for side columns; `"horizontal"` lays the entries out in a wrapping row, for `top_bar` / `bottom_bar`. |
+| `platforms` | `[]` | Optional. Only show entries on these scheduled platforms, as an array (`["A", "B"]`) or comma-separated string (`"A,B"`). Case-insensitive. Combines with `destinationId`. |
+| `type` | `"arrivals"` | `"arrivals"`, `"departures"` or `"both"`. With `"both"` the module shows an Arrivals and a Departures section (stacked, or side by side with `layout: "horizontal"`) and makes two API calls per update, so mind your key's quota. At mid-route stops the two lists are nearly identical; `"both"` is most useful at terminals and stops where vehicles wait. |
+| `maxEntries` | `5` | Number of rows shown, per section when `type` is `"both"`. |
 | `updateInterval` | `300000` | How often the API is called (ms, minimum 30000). Mind your key's rate/quota limits. |
 | `refreshInterval` | `30000` | How often the countdown is redrawn from cached data (ms). |
 | `showHeader` | `true` | Show the stop name. |
