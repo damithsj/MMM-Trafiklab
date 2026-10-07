@@ -39,19 +39,26 @@
 }
 
 .trafiklab-platform {
-  font-size: 12px;
-  display: inline-block;
-  margin-left: 4px;
+  flex: 0 0 auto;
+  margin-left: 6px;
   padding: 0 5px;
   border: 1px solid #666;
   border-radius: 3px;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .trafiklab-info {
+  display: flex;
   flex: 1 1 auto;
+  align-items: center;
   min-width: 0;
-  white-space: nowrap;
+}
+
+.trafiklab-dest {
+  min-width: 0;
   overflow: hidden;
+  white-space: nowrap;
   text-overflow: ellipsis;
 }
 
