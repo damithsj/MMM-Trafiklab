@@ -8,11 +8,11 @@ Choose arrivals, departures, or both (two sections in one panel) with the `type`
 
 Vertical layout (side columns):
 
-![Vertical layout](images/vertical.png)
+![Vertical layout](images/screenshot1-vertical.png)
 
 Horizontal layout (`top_bar` / `bottom_bar`):
 
-![Horizontal layout](images/horizontal.png)
+![Horizontal layout](images/screenshot2-horizontal.png)
 
 ## Install
 

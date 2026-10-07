@@ -1,0 +1,32 @@
+{
+  "name": "mmm-trafiklab",
+  "version": "1.0.0",
+  "description": "MagicMirror² module showing real-time bus, tram and train arrivals and departures for any stop in Sweden, using the Trafiklab Realtime API.",
+  "keywords": [
+    "MagicMirror",
+    "MagicMirror2",
+    "MMM",
+    "trafiklab",
+    "public transport",
+    "sweden",
+    "bus",
+    "train",
+    "tram",
+    "metro",
+    "departures",
+    "arrivals"
+  ],
+  "homepage": "https://github.com/damithsj/MMM-Trafiklab#readme",
+  "bugs": {
+    "url": "https://github.com/damithsj/MMM-Trafiklab/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/damithsj/MMM-Trafiklab.git"
+  },
+  "license": "MIT",
+  "author": "Damith Jinasena",
+  "engines": {
+    "node": ">=18"
+  }
+}
