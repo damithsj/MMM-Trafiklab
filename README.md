@@ -1,6 +1,6 @@
 # MMM-Trafiklab
 
-A [MagicMirror²](https://magicmirror.builders/) module that shows upcoming bus/tram/train arrivals and/or departures for a stop, using the [Trafiklab Realtime API](https://www.trafiklab.se/api/our-apis/trafiklab-realtime-apis). Layout inspired by [MMM-Futar](https://github.com/balassy/MMM-Futar).
+A [MagicMirror²](https://magicmirror.builders/) module that shows upcoming bus/tram/train arrivals and/or departures for a stop in Sweden, using the [Trafiklab Realtime API](https://www.trafiklab.se/api/our-apis/trafiklab-realtime-apis). Layout inspired by [MMM-Futar](https://github.com/balassy/MMM-Futar).
 
 Choose arrivals, departures, or both (two sections in one panel) with the `type` option. Each row shows the line (with a mode icon, colored by transport mode), the direction, the platform letter, the minutes until arrival, and — when the vehicle is off schedule — the timetable time and the delay (`+2` late, `−1` early). Canceled trips are struck through.
 
