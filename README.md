@@ -151,3 +151,7 @@ modeColors: {
   UNKNOWN: "#808080"
 }
 ```
+
+## License
+
+[MIT](LICENSE)
