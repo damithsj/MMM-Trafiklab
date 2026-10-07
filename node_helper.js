@@ -14,7 +14,7 @@ module.exports = NodeHelper.create({
     }
   },
 
-  async fetchArrivals({ identifier, apiKey, stopId, destinationId }) {
+  async fetchArrivals({ identifier, apiKey, stopId, destinationId, platforms }) {
     const url = `${API_BASE}/${encodeURIComponent(stopId)}?key=${encodeURIComponent(apiKey)}`;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
@@ -32,6 +32,16 @@ module.exports = NodeHelper.create({
         arrivals = arrivals.filter(
           (a) => a.route && a.route.destination && String(a.route.destination.id) === String(destinationId)
         );
+      }
+
+      const wanted = (Array.isArray(platforms) ? platforms : String(platforms || "").split(","))
+        .map((p) => String(p).trim().toLowerCase())
+        .filter(Boolean);
+      if (wanted.length) {
+        arrivals = arrivals.filter((a) => {
+          const platform = (a.scheduled_platform || a.realtime_platform || {}).designation;
+          return platform !== undefined && wanted.includes(String(platform).toLowerCase());
+        });
       }
 
       const stop = Array.isArray(body.stops) && body.stops.length ? body.stops[0] : null;

@@ -5,6 +5,7 @@ Module.register("MMM-Trafiklab", {
     apiKey: "", // required
     stopId: "", // required, Trafiklab stop id (e.g. "740056501")
     destinationId: "", // optional, only show arrivals whose final destination has this stop id
+    platforms: [], // optional, only show these scheduled platforms, e.g. ["A", "B"] or "A,B"
     layout: "vertical", // "vertical" for side columns, "horizontal" for top_bar / bottom_bar
     maxEntries: 5,
     updateInterval: 5 * 60 * 1000, // how often to call the API (ms)
@@ -71,7 +72,8 @@ Module.register("MMM-Trafiklab", {
       identifier: this.identifier,
       apiKey: this.config.apiKey,
       stopId: this.config.stopId,
-      destinationId: this.config.destinationId
+      destinationId: this.config.destinationId,
+      platforms: this.config.platforms
     });
   },
 

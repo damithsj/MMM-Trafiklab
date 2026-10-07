@@ -35,6 +35,7 @@ Get an API key (with access to *Trafiklab Realtime APIs*) from [trafiklab.se](ht
 | `stopId` | – | **Required.** Stop id to show arrivals for. |
 | `destinationId` | `""` | Optional. If set, only arrivals whose final destination stop id matches are shown (i.e. one direction of travel). |
 | `layout` | `"vertical"` | `"vertical"` for side columns; `"horizontal"` lays the arrivals out in a wrapping row, for `top_bar` / `bottom_bar`. |
+| `platforms` | `[]` | Optional. Only show arrivals on these scheduled platforms, as an array (`["A", "B"]`) or comma-separated string (`"A,B"`). Case-insensitive. Combines with `destinationId`. |
 | `maxEntries` | `5` | Number of arrivals shown. |
 | `updateInterval` | `300000` | How often the API is called (ms, minimum 30000). Mind your key's rate/quota limits. |
 | `refreshInterval` | `30000` | How often the countdown is redrawn from cached data (ms). |
