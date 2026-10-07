@@ -1,0 +1,11 @@
+{
+  "LOADING": "Loading…",
+  "CONFIG_MISSING": "Please set apiKey and stopId in the module config.",
+  "NO_ARRIVALS": "No upcoming arrivals",
+  "UPDATE_FAILED": "Update failed",
+  "NOW": "Now",
+  "MIN": "min",
+  "CANCELED": "Canceled",
+  "REALTIME": "Live",
+  "SCHEDULED": "Timetable only"
+}

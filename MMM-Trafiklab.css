@@ -1,0 +1,142 @@
+.trafiklab {
+  min-width: 280px;
+  text-align: left;
+}
+
+.trafiklab-header {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid #444;
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.trafiklab-row {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 3px 0;
+  line-height: 1.2;
+}
+
+.trafiklab-line {
+  flex: 0 0 auto;
+  min-width: 2.2em;
+  padding: 1px 6px;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  background-color: #808080;
+}
+
+.trafiklab-icon {
+  margin-right: 5px;
+  font-size: 0.8em;
+}
+
+.trafiklab-platform {
+  font-size: 12px;
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 5px;
+  border: 1px solid #666;
+  border-radius: 3px;
+}
+
+.trafiklab-info {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.trafiklab-time {
+  flex: 0 0 auto;
+  min-width: 4.5em;
+  text-align: right;
+}
+
+.trafiklab-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.trafiklab-dot-live {
+  background-color: #6fcf7f;
+}
+
+.trafiklab-dot-timetable {
+  background-color: #666;
+}
+
+.trafiklab-countdown {
+  font-size: 22px;
+  font-weight: 100;
+}
+
+.trafiklab-sub {
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.trafiklab-late {
+  color: #ff6b5e;
+}
+
+.trafiklab-early {
+  color: #6fcf7f;
+}
+
+.trafiklab-canceled .trafiklab-dest {
+  text-decoration: line-through;
+}
+
+.trafiklab-canceled .trafiklab-countdown {
+  color: #ff6b5e;
+}
+
+.trafiklab-alert {
+  font-size: 12px;
+  margin-top: 6px;
+  color: #e8b04a;
+}
+
+.trafiklab-error {
+  font-size: 12px;
+  margin-top: 4px;
+  color: #ff6b5e;
+}
+
+.trafiklab-msg {
+  font-size: 14px;
+}
+
+.trafiklab-horizontal {
+  min-width: 0;
+  text-align: center;
+}
+
+.trafiklab-horizontal .trafiklab-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 36px;
+}
+
+.trafiklab-horizontal .trafiklab-info {
+  flex: 0 1 auto;
+  max-width: 220px;
+}
+
+.trafiklab-horizontal .trafiklab-time {
+  min-width: 0;
+}

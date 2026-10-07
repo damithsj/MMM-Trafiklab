@@ -1,0 +1,11 @@
+{
+  "LOADING": "Laddar…",
+  "CONFIG_MISSING": "Ange apiKey och stopId i modulens konfiguration.",
+  "NO_ARRIVALS": "Inga kommande ankomster",
+  "UPDATE_FAILED": "Uppdatering misslyckades",
+  "NOW": "Nu",
+  "MIN": "min",
+  "CANCELED": "Inställd",
+  "REALTIME": "Realtid",
+  "SCHEDULED": "Endast tidtabell"
+}
